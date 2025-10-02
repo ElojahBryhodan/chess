@@ -4,4 +4,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   base: "/chess/",   // ⚡ тут твій repo name з GitHub
   plugins: [react()],
+  build: {
+    outDir: "docs",
+  },
 });
