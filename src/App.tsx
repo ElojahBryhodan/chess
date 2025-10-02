@@ -77,8 +77,7 @@ function App() {
     },
   };
 
-  const renderPiece = (cell: Cell) =>
-    cell ? <img src={icons[cell.color][cell.piece]} alt={`${cell.color}-${cell.piece}`} className="w-10 h-10" /> : null;
+  // removed renderPiece helper; inline responsive <img> is used instead
 
   const isInBounds = (row: number, col: number) => row >= 0 && row < 8 && col >= 0 && col < 8;
 
@@ -286,14 +285,14 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F5F5DC]">
-      <div className="bg-[#93C572] p-6 rounded-xl shadow-lg">
-        <h1 className="text-2xl font-bold text-center mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F5DC] p-2 sm:p-4">
+      <div className="bg-[#93C572] p-3 sm:p-6 rounded-xl shadow-lg w-full max-w-[90vw] sm:max-w-[28rem] mx-auto">
+        <h1 className="text-lg sm:text-2xl font-bold text-center mb-2">
           {winner
             ? statusMessage || `Гру закінчено — перемогли ${winner === "white" ? "Білі" : "Чорні"}`
             : statusMessage || `Шахи — черга: ${turn === "white" ? "Білі" : "Чорні"}`}
         </h1>
-        <div className="grid grid-cols-8 gap-0 border-2 border-gray-700">
+        <div className="grid grid-cols-8 gap-0 border-2 border-gray-700 mx-auto w-full">
           {board.map((rowArr, rowIndex) =>
             rowArr.map((cell, colIndex) => {
               const isDark = (rowIndex + colIndex) % 2 === 1;
@@ -308,18 +307,26 @@ function App() {
                 <div
                   key={`${rowIndex}-${colIndex}`}
                   onClick={() => handleCellClick(rowIndex, colIndex)}
-                  className={`w-14 h-14 flex items-center justify-center relative
+                  className={`
+                    aspect-square box-border flex items-center justify-center relative
                     ${isDark ? "bg-[#b58863]" : "bg-[#f0d9b5]"}
                     ${isKingChecked ? "bg-red-200" : ""}
-                    ${cell && isActive ? "border-4 border-yellow-400" : "border border-gray-400"}
+                    ${cell && isActive ? "ring-4 ring-yellow-400 outline-none" : "outline outline-1 outline-gray-400"}
                     cursor-pointer`}
                 >
-                  {renderPiece(cell)}
+                  {/* адаптивний розмір фігур */}
+                  {cell ? (
+                    <img
+                      src={icons[cell.color][cell.piece]}
+                      alt={`${cell.color}-${cell.piece}`}
+                      className="w-[70%] h-[70%] sm:w-10 sm:h-10"
+                    />
+                  ) : null}
                   {isPossibleMove && !isCapture && (
-                    <div className="absolute w-3 h-3 rounded-full bg-blue-700"></div>
+                    <div className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-700"></div>
                   )}
                   {isPossibleMove && isCapture && (
-                    <div className="absolute w-3 h-3 rounded-full bg-red-500 border-1 border-white"></div>
+                    <div className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500 border-1 border-white"></div>
                   )}
                 </div>
               );
